@@ -10,7 +10,7 @@ The generated captioned GIF file will be stored at in the same directory as the 
 There are two ways to use this software:
 
 ### Install the executable (Windows only)
-The executable is available in the "releases" tab. It was generated using pyinstaller[https://github.com/pyinstaller/pyinstaller]. With this method, all you need to do is download the executable and you're good to go! You'll be able to run it anytime you want.
+The executable is available in the "releases" tab. It was generated using [pyinstaller](https://github.com/pyinstaller/pyinstaller). With this method, all you need to do is download the executable and you're good to go! You'll be able to run it anytime you want.
 
 ### Run the Python file
 If you're not on Windows or you simply prefer running the Captioner manually (loading times are usually a bit quicker), it's totally fine. You will only need to run `pip install -r requirements.txt` to download all necessary libraries first, then you'll be able to run the Captioner anytime you want by running the `gif_caption.py` file, like you usually do for other Python files.
