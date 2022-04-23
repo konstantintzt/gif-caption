@@ -4,7 +4,7 @@ from os import path
 from tkinter import Button, Canvas, Entry, Label, Radiobutton, StringVar, Tk, messagebox
 import random
 import string
-from typing import List
+from typing import List, Tuple
 from PIL import GifImagePlugin, ImageDraw, ImageFont
 
 OFFSET = 10 # Pixel offset from edges to text
@@ -17,9 +17,9 @@ FONTS = {
 """
 Saves the provided list of PIL Image objects as a GIF
 """
-def save_gif(images: List[Image.Image], filepath):
+def save_gif(images: List[Image.Image], filepath, frame_duration):
     try:
-        images[0].save(filepath, save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
+        images[0].save(filepath, save_all=True, append_images=images[1:], optimize=True, duration=frame_duration, loop=0)
     except:
         exit()
 
@@ -98,14 +98,16 @@ def text_splitting(image: Image.Image, text: str, font_type: str):
 """
 Converts a GIF into a sequence of PNG images
 """
-def GIF_to_sequence(filepath: str) -> List[Image.Image]:
+def GIF_to_sequence(filepath: str) -> Tuple[List[Image.Image], int]:
     GIF = Image.open(filepath)
     frames: List[Image.Image] = []
+    total_duration = 0
     for frame_number in range(GIF.n_frames):
         GIF.seek(frame_number)
+        total_duration += GIF.info["duration"]
         frames.append(GIF.copy())
     GIF.close()
-    return frames
+    return (frames, total_duration//GIF.n_frames)
 
 
 
@@ -138,14 +140,14 @@ def main():
         if text == "":
             messagebox.showwarning("No caption entered")
 
-        frames = GIF_to_sequence(filepath.get())
+        frames, frame_duration = GIF_to_sequence(filepath.get())
 
         for i in range(len(frames)):
             frames[i] = frames[i].convert("RGBA")
             frames[i] = white_bg(frames[i], text, font_size.get())
             frames[i] = add_caption(frames[i], text, font_size.get())
 
-        save_gif(frames, path.dirname(filepath.get())+"/captioned_"+random_string(5)+".gif")
+        save_gif(frames, path.dirname(filepath.get())+"/captioned_"+random_string(5)+".gif", frame_duration)
 
     canvas = Canvas(root, width=500, height=500)
     canvas.pack()
